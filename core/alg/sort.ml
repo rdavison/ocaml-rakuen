@@ -44,11 +44,51 @@ module Mergesort = struct
       merge (sort left) (sort right)
 end
 
+module Quicksort = struct
+  let swap a i j =
+    let tmp = a.(i) in
+    a.(i) <- a.(j);
+    a.(j) <- tmp
+
+  let partition a lo hi =
+    let pivot = hi in
+    let i = ref 0 in
+    for j = 0 to (hi - 1) do
+      if a.(j) <= a.(pivot) then
+        begin
+          swap a !i j;
+          incr i;
+        end;
+    done;
+    swap a !i pivot;
+    !i
+
+  let sort a =
+    let rec go a lo hi =
+      if lo < hi then
+        begin
+          let p = partition a lo hi in
+          go a lo (p - 1);
+          go a (p + 1) hi;
+        end;
+    in
+    go a 0 (Array.length a - 1)
+end
+
 let main =
   Random.self_init ();
+  print_string "Mergesort\n";
   let a = Array.init 50 (fun _ -> Random.int 10) in
   Array.iter print_int a;
   print_newline ();
   let a = Mergesort.sort a in
+  Array.iter print_int a;
+  print_newline ();
+
+  print_string "Quicksort\n";
+  let a = Array.init 50 (fun _ -> Random.int 10) in
+  Array.iter print_int a;
+  print_newline ();
+  Quicksort.sort a;
   Array.iter print_int a;
   print_newline ();
