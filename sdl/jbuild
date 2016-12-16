@@ -1,0 +1,8 @@
+(executables
+ ((names (pixels))
+  (libraries (base ppx_let stdio tsdl))
+  (preprocess (pps (ppx_let)))))
+
+(install
+ ((section bin)
+  (files ((pixels.exe as pixels)))))
