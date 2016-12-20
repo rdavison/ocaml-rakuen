@@ -63,12 +63,44 @@ let print t =
   in
   aux t 0 "Root:"
 
+let rec iter_dfs f = function
+  | Node (Empty, x, Empty) -> f x
+  | Node (l, x, Empty) -> iter_dfs f l; f x
+  | Node (Empty, x, r) -> f x; iter_dfs f r
+  | Node (l, x, r) -> iter_dfs f l; f x; iter_dfs f r
+  | Empty -> ()
+
+let iter_bfs f t =
+  let children = function
+    | Empty -> []
+    | Node (l, _, r) -> [l; r]
+  in
+  let rec aux = function
+    | [] -> ()
+    | ts ->
+      begin
+        List.iter (function Empty -> () | Node (_,x,_) -> f x) ts;
+        print_newline ();
+        aux (ts |> List.map children |> List.flatten)
+      end
+  in
+  aux [t]
+
+
 let _ =
   let tree1 =
     init ()
-    |> insert 10
-    |> insert 5
+    |> insert 4
+    |> insert 2
     |> insert 1
     |> insert 3
+    |> insert 6
+    |> insert 5
+    |> insert 7
   in
-  print tree1
+  print tree1;
+  print_newline ();
+  iter_dfs print_int tree1;
+  print_newline ();
+  print_newline ();
+  iter_bfs print_int tree1;
